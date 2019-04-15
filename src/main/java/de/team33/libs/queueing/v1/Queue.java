@@ -21,6 +21,10 @@ public class Queue {
         final Path home = Optional.ofNullable(System.getProperties().getProperty("user.home"))
                 .map(Paths::get)
                 .orElseThrow(() -> new IllegalStateException("system property <user.home> not found"));
-        return home.resolve(".runtime").resolve(Queue.class.getCanonicalName());
+        return home.resolve(".runtime").resolve(Queue.class.getCanonicalName()).toAbsolutePath().normalize();
+    }
+
+    public void put(final String message) {
+        throw new UnsupportedOperationException("not yet implemented");
     }
 }

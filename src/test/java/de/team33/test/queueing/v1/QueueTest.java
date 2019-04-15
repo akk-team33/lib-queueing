@@ -1,10 +1,12 @@
 package de.team33.test.queueing.v1;
 
+import com.google.gson.Gson;
 import de.team33.libs.queueing.v1.Queue;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
 public class QueueTest {
 
@@ -23,14 +25,10 @@ public class QueueTest {
         Assert.assertEquals(produced, consumed);
     }
 
-    private class Producer implements Runnable {
+    private static class Message {
 
-        private Producer(final Queue queue) {
-        }
-
-        @Override
-        public void run() {
-            throw new UnsupportedOperationException("not yet implemented");
+        private String toJson() {
+            return new Gson().toJson(this);
         }
     }
 
@@ -41,6 +39,23 @@ public class QueueTest {
 
         @Override
         public void run() {
+            throw new UnsupportedOperationException("not yet implemented");
+        }
+    }
+
+    private class Producer implements Runnable {
+
+        private final Queue queue;
+
+        private Producer(final Queue queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            Stream.generate(Message::new).limit(100).map(Message::toJson).forEach(message -> {
+                queue.put(message);
+            });
             throw new UnsupportedOperationException("not yet implemented");
         }
     }
